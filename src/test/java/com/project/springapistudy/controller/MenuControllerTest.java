@@ -86,12 +86,12 @@ class MenuControllerTest {
         when(menuService.findMenuById(1L)).thenReturn(response);
 
         //when
-        MvcResult result = mockMvc.perform(get("/menu/{menuId}", 1).contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(get("/menu/{menuId}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(handler().methodName("findMenuOne"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        CreateMenuResponse findMenu = objectMapper.readValue(result.getResponse().getContentAsString(), CreateMenuResponse.class);
+        CreateMenuResponse findMenu = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), CreateMenuResponse.class);
 
         //then
         assertThat(findMenu.getId()).isEqualTo(response.getId());
@@ -111,13 +111,13 @@ class MenuControllerTest {
         given(menuService.findMenuAll()).willReturn(menus);
 
         //when
-        MvcResult result = mockMvc.perform(get("/menu"))
+        MvcResult mvcResult = mockMvc.perform(get("/menu"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        String resultString = result.getResponse().getContentAsString();
-        ObjectMapper objectMapper1 = new ObjectMapper();
-        List<CreateMenuResponse> findMenus = objectMapper1.readValue(resultString, new TypeReference<>() {});
+        String resultString = mvcResult.getResponse().getContentAsString();
+
+        List<CreateMenuResponse> findMenus = objectMapper.readValue(resultString, new TypeReference<>() {});
 
         //then
         assertThat(findMenus.size()).isEqualTo(menus.size());
@@ -134,7 +134,7 @@ class MenuControllerTest {
         when(menuService.updateMenu(1L, updateMenuRequest)).thenReturn(updateMenuResponse);
 
         //when
-        MvcResult result = mockMvc.perform(put("/menu/{menuId}", 1)
+        MvcResult mvcResult = mockMvc.perform(put("/menu/{menuId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateMenuRequest)))
                 .andExpect(handler().methodName("updateMenu"))
@@ -142,8 +142,8 @@ class MenuControllerTest {
                 .andReturn();
 
         //then
-        assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(result.getResponse().getRedirectedUrl()).isNotNull();
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(mvcResult.getResponse().getRedirectedUrl()).isNotNull();
     }
 
     @Test
@@ -156,14 +156,14 @@ class MenuControllerTest {
         given(menuService.changeMenuToNonUse(1L)).willReturn(updateMenuResponse);
 
         //when
-        MvcResult result = mockMvc.perform(patch("/menu/{menuId}", 1)
+        MvcResult mvcResult = mockMvc.perform(patch("/menu/{menuId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateMenuRequest)))
                 .andExpect(handler().methodName("changeMenuToNonUse"))
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        UpdateMenuResponse nonUseMenu = objectMapper.readValue(result.getResponse().getContentAsString(), UpdateMenuResponse.class);
+        UpdateMenuResponse nonUseMenu = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UpdateMenuResponse.class);
 
         //then
         assertThat(nonUseMenu.getUseYN()).isEqualTo("N");
