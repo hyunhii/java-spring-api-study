@@ -38,4 +38,9 @@ public class MenuController {
     public ResponseEntity<UpdateMenuResponse> updateMenu(@PathVariable Long menuId, @RequestBody UpdateMenuRequest request) {
         return ResponseEntity.created(URI.create("/" + menuId)).body(menuService.updateMenu(menuId, request));
     }
+
+    @PatchMapping("/{menuId}")
+    public ResponseEntity<UpdateMenuResponse> changeMenuToNonUse(@PathVariable Long menuId) {
+        return ResponseEntity.created(URI.create("/" + menuId)).body(menuService.changeMenuToNonUse(menuId));
+    }
 }

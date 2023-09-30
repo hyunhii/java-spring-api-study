@@ -131,7 +131,7 @@ class MenuControllerTest {
         UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, "N");
         UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, "N");
 
-        given(menuService.updateMenu(1L, updateMenuRequest)).willReturn(updateMenuResponse);
+        when(menuService.updateMenu(1L, updateMenuRequest)).thenReturn(updateMenuResponse);
 
         //when
         MvcResult result = mockMvc.perform(put("/menu/{menuId}", 1)
@@ -144,6 +144,29 @@ class MenuControllerTest {
         //then
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(result.getResponse().getRedirectedUrl()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("메뉴 사용 안함")
+    void changeMenuToNonUse() throws Exception {
+        //given
+        UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, "N");
+        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, "N");
+
+        given(menuService.changeMenuToNonUse(1L)).willReturn(updateMenuResponse);
+
+        //when
+        MvcResult result = mockMvc.perform(patch("/menu/{menuId}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateMenuRequest)))
+                .andExpect(handler().methodName("changeMenuToNonUse"))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        UpdateMenuResponse nonUseMenu = objectMapper.readValue(result.getResponse().getContentAsString(), UpdateMenuResponse.class);
+
+        //then
+        assertThat(nonUseMenu.getUseYN()).isEqualTo("N");
     }
 
 }
