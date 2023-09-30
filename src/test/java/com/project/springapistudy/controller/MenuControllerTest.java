@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.springapistudy.entity.MenuType;
 import com.project.springapistudy.service.MenuService;
 import com.project.springapistudy.service.dto.CreateMenuResponse;
+import com.project.springapistudy.service.dto.UpdateMenuRequest;
+import com.project.springapistudy.service.dto.UpdateMenuResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,6 +122,28 @@ class MenuControllerTest {
         //then
         assertThat(findMenus.size()).isEqualTo(menus.size());
 
+    }
+
+    @Test
+    @DisplayName("메뉴 수정")
+    void updateMenu() throws Exception {
+        //given
+        UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, "N");
+        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, "N");
+
+        given(menuService.updateMenu(1L, updateMenuRequest)).willReturn(updateMenuResponse);
+
+        //when
+        MvcResult result = mockMvc.perform(put("/menu/{menuId}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateMenuRequest)))
+                .andExpect(handler().methodName("updateMenu"))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        //then
+        assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(result.getResponse().getRedirectedUrl()).isNotNull();
     }
 
 }

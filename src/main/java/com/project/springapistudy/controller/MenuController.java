@@ -3,6 +3,8 @@ package com.project.springapistudy.controller;
 import com.project.springapistudy.service.MenuService;
 import com.project.springapistudy.service.dto.CreateMenuRequest;
 import com.project.springapistudy.service.dto.CreateMenuResponse;
+import com.project.springapistudy.service.dto.UpdateMenuRequest;
+import com.project.springapistudy.service.dto.UpdateMenuResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +32,10 @@ public class MenuController {
     @GetMapping
     public ResponseEntity<List<CreateMenuResponse>> findMenuAll() {
         return new ResponseEntity<>(menuService.findMenuAll(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{menuId}")
+    public ResponseEntity<UpdateMenuResponse> updateMenu(@PathVariable Long menuId, @RequestBody UpdateMenuRequest request) {
+        return ResponseEntity.created(URI.create("/" + menuId)).body(menuService.updateMenu(menuId, request));
     }
 }
