@@ -4,6 +4,8 @@ import com.project.springapistudy.entity.Menu;
 import com.project.springapistudy.repository.MenuRepository;
 import com.project.springapistudy.service.dto.CreateMenuRequest;
 import com.project.springapistudy.service.dto.CreateMenuResponse;
+import com.project.springapistudy.service.dto.UpdateMenuRequest;
+import com.project.springapistudy.service.dto.UpdateMenuResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,15 @@ public class MenuService {
                 .map(menu -> new CreateMenuResponse(
                         menu.getId(), menu.getName(), menu.getType(), menu.getUseYN()
                 )).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UpdateMenuResponse updateMenu(Long id, UpdateMenuRequest updateMenuRequest) {
+        Menu findMenu = menuRepository.findById(id).orElseThrow();
+
+        findMenu.changeMenuInfo(updateMenuRequest);
+
+        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
     }
 
 }

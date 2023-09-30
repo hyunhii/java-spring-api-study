@@ -1,5 +1,6 @@
 package com.project.springapistudy.entity;
 
+import com.project.springapistudy.service.dto.UpdateMenuRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +40,11 @@ public class Menu {
         this.name = name;
         this.type = type;
         this.useYN = useYN;
+    }
+
+    public void changeMenuInfo(UpdateMenuRequest updateRequest) {
+        this.name = updateRequest.getName();
+        this.type = updateRequest.getType();
+        this.useYN = updateRequest.getUseYN();
     }
 }

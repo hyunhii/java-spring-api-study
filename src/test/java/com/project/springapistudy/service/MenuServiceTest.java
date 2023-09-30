@@ -1,9 +1,10 @@
 package com.project.springapistudy.service;
 
 import com.project.springapistudy.entity.MenuType;
-import com.project.springapistudy.repository.MenuRepository;
 import com.project.springapistudy.service.dto.CreateMenuRequest;
 import com.project.springapistudy.service.dto.CreateMenuResponse;
+import com.project.springapistudy.service.dto.UpdateMenuRequest;
+import com.project.springapistudy.service.dto.UpdateMenuResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ class MenuServiceTest {
 
     @Autowired MenuService menuService;
 
-    @Autowired MenuRepository menuRepository;
     @Test
     @DisplayName("메뉴 등록")
     void createMenu() {
@@ -72,5 +72,24 @@ class MenuServiceTest {
         assertThat(allMenu.get(0).getName()).isEqualTo(request1.getName());
         assertThat(allMenu.get(1).getName()).isEqualTo(request2.getName());
     }
+
+    @Test
+    @DisplayName("메뉴 수정")
+    void updateMenu() {
+        //given
+        CreateMenuRequest request = new CreateMenuRequest("아메리카노", MenuType.BEVERAGE, "Y");
+        CreateMenuResponse savedMenu = menuService.createMenu(request);
+
+        UpdateMenuRequest updateRequest = new UpdateMenuRequest("치즈케이크", MenuType.DESSERT, "N");
+
+        //when
+        UpdateMenuResponse updateMenuResponse = menuService.updateMenu(savedMenu.getId(), updateRequest);
+
+        //then
+        assertThat(updateMenuResponse.getName()).isEqualTo(updateRequest.getName());
+        assertThat(updateMenuResponse.getType()).isEqualTo(updateRequest.getType());
+        assertThat(updateMenuResponse.getUseYN()).isEqualTo(updateRequest.getUseYN());
+    }
+
 
 }
