@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/menu")
@@ -24,5 +25,10 @@ public class MenuController {
     @GetMapping("/{menuId}")
     public ResponseEntity<CreateMenuResponse> findMenuOne(@PathVariable Long menuId) {
         return new ResponseEntity<>(menuService.findMenuById(menuId), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CreateMenuResponse>> findMenuAll() {
+        return new ResponseEntity<>(menuService.findMenuAll(), HttpStatus.OK);
     }
 }

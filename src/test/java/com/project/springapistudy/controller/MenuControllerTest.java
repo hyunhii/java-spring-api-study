@@ -1,5 +1,6 @@
 package com.project.springapistudy.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.springapistudy.entity.MenuType;
 import com.project.springapistudy.service.MenuService;
@@ -20,10 +21,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -95,6 +96,30 @@ class MenuControllerTest {
         assertThat(findMenu.getName()).isEqualTo(response.getName());
         assertThat(findMenu.getType()).isEqualTo(response.getType());
         assertThat(findMenu.getUseYN()).isEqualTo(response.getUseYN());
+    }
+
+    @Test
+    @DisplayName("메뉴 전체 조회")
+    void findMenuAll() throws Exception {
+        //given
+        ArrayList<CreateMenuResponse> menus = new ArrayList<>();
+        menus.add(new CreateMenuResponse(1L, "아메리카노", MenuType.BEVERAGE,"Y"));
+        menus.add(new CreateMenuResponse(2L, "라떼", MenuType.BEVERAGE,"Y"));
+        menus.add(new CreateMenuResponse(3L, "카푸치노", MenuType.BEVERAGE,"Y"));
+        given(menuService.findMenuAll()).willReturn(menus);
+
+        //when
+        MvcResult result = mockMvc.perform(get("/menu"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String resultString = result.getResponse().getContentAsString();
+        ObjectMapper objectMapper1 = new ObjectMapper();
+        List<CreateMenuResponse> findMenus = objectMapper1.readValue(resultString, new TypeReference<>() {});
+
+        //then
+        assertThat(findMenus.size()).isEqualTo(menus.size());
+
     }
 
 }
