@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,15 @@ public class MenuService {
         Menu findMenu = menuRepository.findById(id).orElseThrow();
 
         return new CreateMenuResponse(findMenu.getId(), findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
+    }
+
+    public List<CreateMenuResponse> findMenuAll() {
+        List<Menu> allMenu = menuRepository.findAll();
+
+        return allMenu.stream()
+                .map(menu -> new CreateMenuResponse(
+                        menu.getId(), menu.getName(), menu.getType(), menu.getUseYN()
+                )).collect(Collectors.toList());
     }
 
 }

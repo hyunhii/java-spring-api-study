@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -50,6 +52,25 @@ class MenuServiceTest {
         assertThat(response.getName()).isEqualTo(request.getName());
         assertThat(response.getType()).isEqualTo(request.getType());
         assertThat(response.getUseYN()).isEqualTo(request.getUseYN());
+    }
+
+    @Test
+    @DisplayName("메뉴 전체 조회")
+    void findMenuAll() {
+        //given
+        CreateMenuRequest request1 = new CreateMenuRequest("아메리카노", MenuType.BEVERAGE, "Y");
+        menuService.createMenu(request1);
+
+        CreateMenuRequest request2 = new CreateMenuRequest("라떼", MenuType.BEVERAGE, "Y");
+        menuService.createMenu(request2);
+
+        //when
+        List<CreateMenuResponse> allMenu = menuService.findMenuAll();
+
+        //then
+        assertThat(allMenu.size()).isEqualTo(2);
+        assertThat(allMenu.get(0).getName()).isEqualTo(request1.getName());
+        assertThat(allMenu.get(1).getName()).isEqualTo(request2.getName());
     }
 
 }
