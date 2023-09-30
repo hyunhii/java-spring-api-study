@@ -1,6 +1,7 @@
 package com.project.springapistudy.service;
 
 import com.project.springapistudy.entity.MenuType;
+import com.project.springapistudy.repository.MenuRepository;
 import com.project.springapistudy.service.dto.CreateMenuRequest;
 import com.project.springapistudy.service.dto.CreateMenuResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -15,8 +16,9 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 class MenuServiceTest {
 
-    @Autowired MenuService service;
+    @Autowired MenuService menuService;
 
+    @Autowired MenuRepository menuRepository;
     @Test
     @DisplayName("메뉴 등록")
     void createMenu() {
@@ -24,7 +26,7 @@ class MenuServiceTest {
         CreateMenuRequest request = new CreateMenuRequest("아메리카노", MenuType.BEVERAGE, "Y");
 
         //when
-        CreateMenuResponse savedMenu = service.createMenu(request);
+        CreateMenuResponse savedMenu = menuService.createMenu(request);
 
         //then
         assertThat(savedMenu.getId()).isGreaterThan(0L);
@@ -33,5 +35,21 @@ class MenuServiceTest {
         assertThat(savedMenu.getUseYN()).isEqualTo(request.getUseYN());
     }
 
+    @Test
+    @DisplayName("메뉴 단건 조회")
+    void findMenu() {
+        //given
+        CreateMenuRequest request = new CreateMenuRequest("아메리카노", MenuType.BEVERAGE, "Y");
+        CreateMenuResponse savedMenu = menuService.createMenu(request);
+
+        //when
+        CreateMenuResponse response = menuService.findMenuById(savedMenu.getId());
+
+        //then
+        assertThat(response.getId()).isGreaterThan(0L);
+        assertThat(response.getName()).isEqualTo(request.getName());
+        assertThat(response.getType()).isEqualTo(request.getType());
+        assertThat(response.getUseYN()).isEqualTo(request.getUseYN());
+    }
 
 }

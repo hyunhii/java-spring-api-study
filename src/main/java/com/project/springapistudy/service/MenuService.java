@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,6 +23,12 @@ public class MenuService {
         Menu savedMenu = menuRepository.save(menu);
 
         return new CreateMenuResponse(savedMenu.getId(), savedMenu.getName(), savedMenu.getType(), savedMenu.getUseYN());
+    }
+
+    public CreateMenuResponse findMenuById(Long id) {
+        Menu findMenu = menuRepository.findById(id).orElseThrow();
+
+        return new CreateMenuResponse(findMenu.getId(), findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
     }
 
 }
