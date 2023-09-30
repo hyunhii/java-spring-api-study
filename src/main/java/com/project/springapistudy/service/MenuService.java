@@ -54,4 +54,13 @@ public class MenuService {
         return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
     }
 
+    @Transactional
+    public UpdateMenuResponse changeMenuToNonUse(Long id) {
+        Menu findMenu = menuRepository.findById(id).orElseThrow();
+
+        findMenu.changeMenuToNonUse();
+
+        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
+    }
+
 }

@@ -91,5 +91,20 @@ class MenuServiceTest {
         assertThat(updateMenuResponse.getUseYN()).isEqualTo(updateRequest.getUseYN());
     }
 
+    @Test
+    @DisplayName("메뉴 사용 안함")
+    void changeMenuToNonUse() {
+        //given
+        CreateMenuRequest request = new CreateMenuRequest("아메리카노", MenuType.BEVERAGE, "Y");
+        CreateMenuResponse savedMenu = menuService.createMenu(request);
+
+        //when
+        UpdateMenuResponse updateMenuResponse = menuService.changeMenuToNonUse(savedMenu.getId());
+
+        //then
+        assertThat(updateMenuResponse.getUseYN()).isEqualTo("N");
+
+    }
+
 
 }

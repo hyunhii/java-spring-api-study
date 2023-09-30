@@ -47,4 +47,8 @@ public class Menu {
         this.type = updateRequest.getType();
         this.useYN = updateRequest.getUseYN();
     }
+
+    public void changeMenuToNonUse() {
+        this.useYN = "N";
+    }
 }
