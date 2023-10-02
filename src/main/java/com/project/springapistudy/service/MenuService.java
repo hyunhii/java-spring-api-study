@@ -24,16 +24,16 @@ public class MenuService {
     @Transactional
     public CreateMenuResponse createMenu(CreateMenuRequest request) {
 
-        Menu menu = new Menu(request.getName(), request.getType(), request.getUseYN());
+        Menu menu = new Menu(request.getName(), request.getType(), request.isUsing());
         Menu savedMenu = menuRepository.save(menu);
 
-        return new CreateMenuResponse(savedMenu.getId(), savedMenu.getName(), savedMenu.getType(), savedMenu.getUseYN());
+        return new CreateMenuResponse(savedMenu.getId(), savedMenu.getName(), savedMenu.getType(), savedMenu.isUsing());
     }
 
     public CreateMenuResponse findMenuById(Long id) {
         Menu findMenu = menuRepository.findById(id).orElseThrow();
 
-        return new CreateMenuResponse(findMenu.getId(), findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
+        return new CreateMenuResponse(findMenu.getId(), findMenu.getName(), findMenu.getType(), findMenu.isUsing());
     }
 
     public List<CreateMenuResponse> findMenuAll() {
@@ -41,7 +41,7 @@ public class MenuService {
 
         return allMenu.stream()
                 .map(menu -> new CreateMenuResponse(
-                        menu.getId(), menu.getName(), menu.getType(), menu.getUseYN()
+                        menu.getId(), menu.getName(), menu.getType(), menu.isUsing()
                 )).collect(Collectors.toList());
     }
 
@@ -51,7 +51,7 @@ public class MenuService {
 
         findMenu.changeMenuInfo(updateMenuRequest);
 
-        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
+        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.isUsing());
     }
 
     @Transactional
@@ -60,7 +60,7 @@ public class MenuService {
 
         findMenu.changeMenuToNonUse();
 
-        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.getUseYN());
+        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.isUsing());
     }
 
 }

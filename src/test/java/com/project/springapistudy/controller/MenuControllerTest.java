@@ -89,7 +89,7 @@ class MenuControllerTest {
     @DisplayName("메뉴 조회")
     void findMenuOne() throws Exception {
         //given
-        CreateMenuResponse response = new CreateMenuResponse(1L, "아메리카노", MenuType.BEVERAGE, "Y");
+        CreateMenuResponse response = new CreateMenuResponse(1L, "아메리카노", MenuType.BEVERAGE, true);
 
         when(menuService.findMenuById(1L)).thenReturn(response);
 
@@ -105,7 +105,7 @@ class MenuControllerTest {
         assertThat(findMenu.getId()).isEqualTo(response.getId());
         assertThat(findMenu.getName()).isEqualTo(response.getName());
         assertThat(findMenu.getType()).isEqualTo(response.getType());
-        assertThat(findMenu.getUseYN()).isEqualTo(response.getUseYN());
+        assertThat(findMenu.isUsing()).isEqualTo(response.isUsing());
     }
 
     @Test
@@ -113,9 +113,9 @@ class MenuControllerTest {
     void findMenuAll() throws Exception {
         //given
         ArrayList<CreateMenuResponse> menus = new ArrayList<>();
-        menus.add(new CreateMenuResponse(1L, "아메리카노", MenuType.BEVERAGE,"Y"));
-        menus.add(new CreateMenuResponse(2L, "라떼", MenuType.BEVERAGE,"Y"));
-        menus.add(new CreateMenuResponse(3L, "카푸치노", MenuType.BEVERAGE,"Y"));
+        menus.add(new CreateMenuResponse(1L, "아메리카노", MenuType.BEVERAGE,true));
+        menus.add(new CreateMenuResponse(2L, "라떼", MenuType.BEVERAGE,true));
+        menus.add(new CreateMenuResponse(3L, "카푸치노", MenuType.BEVERAGE,true));
         given(menuService.findMenuAll()).willReturn(menus);
 
         //when
@@ -136,8 +136,8 @@ class MenuControllerTest {
     @DisplayName("메뉴 수정")
     void updateMenu() throws Exception {
         //given
-        UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, "N");
-        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, "N");
+        UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, true);
+        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, true);
 
         when(menuService.updateMenu(1L, updateMenuRequest)).thenReturn(updateMenuResponse);
 
@@ -158,8 +158,8 @@ class MenuControllerTest {
     @DisplayName("메뉴 사용 안함")
     void changeMenuToNonUse() throws Exception {
         //given
-        UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, "N");
-        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, "N");
+        UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, false);
+        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, false);
 
         given(menuService.changeMenuToNonUse(1L)).willReturn(updateMenuResponse);
 
@@ -174,7 +174,7 @@ class MenuControllerTest {
         UpdateMenuResponse nonUseMenu = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UpdateMenuResponse.class);
 
         //then
-        assertThat(nonUseMenu.getUseYN()).isEqualTo("N");
+        assertThat(nonUseMenu.isUsing()).isEqualTo(false);
     }
 
 }

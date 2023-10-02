@@ -39,23 +39,22 @@ public class Menu {
     private MenuType type;
 
     @Column(name = "use_yn")
-    @Size(min = 1, max = 1)
-    private String useYN;
+    private boolean isUsing;
 
 
-    public Menu(String name, MenuType type, String useYN) {
+    public Menu(String name, MenuType type, boolean isUsing) {
         this.name = name;
         this.type = type;
-        this.useYN = useYN;
+        this.isUsing = isUsing;
     }
 
     public void changeMenuInfo(UpdateMenuRequest updateRequest) {
-        this.name = updateRequest.getName();
-        this.type = updateRequest.getType();
-        this.useYN = updateRequest.getUseYN();
+        name = updateRequest.getName();
+        type = updateRequest.getType();
+        isUsing = updateRequest.isUsing();
     }
 
     public void changeMenuToNonUse() {
-        this.useYN = "N";
+        isUsing = false;
     }
 }

@@ -20,13 +20,13 @@ public class UpdateMenuResponse {
     @NotNull
     private MenuType type;
 
-    @NotBlank
-    private String useYN;
+    @NotNull
+    private boolean isUsing;
 
-    public UpdateMenuResponse(Long id, String name, MenuType type, String useYN) {
+    public UpdateMenuResponse(Long id, String name, MenuType type, boolean isUsing) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.useYN = useYN;
+        this.isUsing = isUsing;
     }
 }

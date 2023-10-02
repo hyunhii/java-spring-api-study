@@ -17,12 +17,12 @@ public class UpdateMenuRequest {
     @NotNull
     private MenuType type;
 
-    @NotBlank
-    private String useYN;
+    @NotNull
+    private boolean isUsing;
 
-    public UpdateMenuRequest(String name, MenuType type, String useYN) {
+    public UpdateMenuRequest(String name, MenuType type, boolean isUsing) {
         this.name = name;
         this.type = type;
-        this.useYN = useYN;
+        this.isUsing = isUsing;
     }
 }

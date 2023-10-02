@@ -1,5 +1,6 @@
 package com.project.springapistudy.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.springapistudy.entity.MenuType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,13 +21,14 @@ public class CreateMenuResponse {
     @NotNull
     private MenuType type;
 
-    @NotBlank
-    private String useYN;
+    @NotNull
+    @JsonProperty("isUsing")
+    private boolean isUsing;
 
-    public CreateMenuResponse(Long id, String name, MenuType type, String useYN) {
+    public CreateMenuResponse(Long id, String name, MenuType type, boolean isUsing) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.useYN = useYN;
+        this.isUsing = isUsing;
     }
 }
