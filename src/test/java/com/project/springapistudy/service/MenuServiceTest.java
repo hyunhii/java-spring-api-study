@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SpringBootTest
 @Transactional
@@ -31,10 +32,12 @@ class MenuServiceTest {
         CreateMenuResponse savedMenu = menuService.createMenu(request);
 
         //then
-        assertThat(savedMenu.getId()).isGreaterThan(0L);
-        assertThat(savedMenu.getName()).isEqualTo(request.getName());
-        assertThat(savedMenu.getType()).isEqualTo(request.getType());
-        assertThat(savedMenu.isUsing()).isEqualTo(request.isUsing());
+        assertSoftly((softly) -> {
+            softly.assertThat(savedMenu.getId()).isGreaterThan(0L);
+            softly.assertThat(savedMenu.getName()).isEqualTo(request.getName());
+            softly.assertThat(savedMenu.getType()).isEqualTo(request.getType());
+            softly.assertThat(savedMenu.isUsing()).isEqualTo(request.isUsing());
+        });
     }
 
     @Test
@@ -48,10 +51,12 @@ class MenuServiceTest {
         CreateMenuResponse response = menuService.findMenuById(savedMenu.getId());
 
         //then
-        assertThat(response.getId()).isGreaterThan(0L);
-        assertThat(response.getName()).isEqualTo(request.getName());
-        assertThat(response.getType()).isEqualTo(request.getType());
-        assertThat(response.isUsing()).isEqualTo(request.isUsing());
+        assertSoftly((softly) -> {
+            softly.assertThat(response.getId()).isGreaterThan(0L);
+            softly.assertThat(response.getName()).isEqualTo(request.getName());
+            softly.assertThat(response.getType()).isEqualTo(request.getType());
+            softly.assertThat(response.isUsing()).isEqualTo(request.isUsing());
+        });
     }
 
     @Test
@@ -68,9 +73,11 @@ class MenuServiceTest {
         List<CreateMenuResponse> allMenu = menuService.findMenuAll();
 
         //then
-        assertThat(allMenu.size()).isEqualTo(2);
-        assertThat(allMenu.get(0).getName()).isEqualTo(request1.getName());
-        assertThat(allMenu.get(1).getName()).isEqualTo(request2.getName());
+        assertSoftly((softly) -> {
+            softly.assertThat(allMenu.size()).isEqualTo(2);
+            softly.assertThat(allMenu.get(0).getName()).isEqualTo(request1.getName());
+            softly.assertThat(allMenu.get(1).getName()).isEqualTo(request2.getName());
+        });
     }
 
     @Test
@@ -86,9 +93,11 @@ class MenuServiceTest {
         UpdateMenuResponse updateMenuResponse = menuService.updateMenu(savedMenu.getId(), updateRequest);
 
         //then
-        assertThat(updateMenuResponse.getName()).isEqualTo(updateRequest.getName());
-        assertThat(updateMenuResponse.getType()).isEqualTo(updateRequest.getType());
-        assertThat(updateMenuResponse.isUsing()).isEqualTo(updateRequest.isUsing());
+        assertSoftly((softly) -> {
+            softly.assertThat(updateMenuResponse.getName()).isEqualTo(updateRequest.getName());
+            softly.assertThat(updateMenuResponse.getType()).isEqualTo(updateRequest.getType());
+            softly.assertThat(updateMenuResponse.isUsing()).isEqualTo(updateRequest.isUsing());
+        });
     }
 
     @Test

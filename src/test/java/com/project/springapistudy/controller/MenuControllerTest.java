@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -81,8 +82,10 @@ class MenuControllerTest {
                 .andReturn();
 
         //then
-        assertThat(mvcResult.getResponse().getRedirectedUrl()).isNotNull();
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertSoftly((softly) -> {
+            softly.assertThat(mvcResult.getResponse().getRedirectedUrl()).isNotNull();
+            softly.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        });
     }
 
     @Test
@@ -107,10 +110,12 @@ class MenuControllerTest {
         CreateMenuResponse findMenu = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), CreateMenuResponse.class);
 
         //then
-        assertThat(findMenu.getId()).isEqualTo(response.getId());
-        assertThat(findMenu.getName()).isEqualTo(response.getName());
-        assertThat(findMenu.getType()).isEqualTo(response.getType());
-        assertThat(findMenu.isUsing()).isEqualTo(response.isUsing());
+        assertSoftly((softly) -> {
+            softly.assertThat(findMenu.getId()).isEqualTo(response.getId());
+            softly.assertThat(findMenu.getName()).isEqualTo(response.getName());
+            softly.assertThat(findMenu.getType()).isEqualTo(response.getType());
+            softly.assertThat(findMenu.isUsing()).isEqualTo(response.isUsing());
+        });
     }
 
     @Test
@@ -160,8 +165,10 @@ class MenuControllerTest {
                 .andReturn();
 
         //then
-        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(mvcResult.getResponse().getRedirectedUrl()).isNotNull();
+        assertSoftly((softly) -> {
+            softly.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
+            softly.assertThat(mvcResult.getResponse().getRedirectedUrl()).isNotNull();
+        });
     }
 
     @Test
