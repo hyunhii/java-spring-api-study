@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.springapistudy.entity.MenuType;
 import com.project.springapistudy.service.MenuService;
+import com.project.springapistudy.service.dto.CreateMenuRequest;
 import com.project.springapistudy.service.dto.CreateMenuResponse;
 import com.project.springapistudy.service.dto.UpdateMenuRequest;
 import com.project.springapistudy.service.dto.UpdateMenuResponse;
@@ -23,14 +24,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,16 +66,20 @@ class MenuControllerTest {
     @DisplayName("메뉴 저장")
     void save() throws Exception {
         //given
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("name", "아메리카노");
-        requestMap.put("type", "BEVERAGE");
-        requestMap.put("useYN", "Y");
-        String request = objectMapper.writeValueAsString(requestMap);
+        CreateMenuRequest request = new CreateMenuRequest("아메리카노", MenuType.BEVERAGE, true);
 
+        CreateMenuResponse response = CreateMenuResponse.builder()
+                .id(1L)
+                .name("아메리카노")
+                .type(MenuType.BEVERAGE)
+                .isUsing(true)
+                .build();
+
+        given(menuService.createMenu(any())).willReturn(response);
 
         //when
         MvcResult mvcResult = mockMvc.perform(post("/menu")
-                        .content(request)
+                        .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -154,7 +157,7 @@ class MenuControllerTest {
                 .isUsing(true)
                 .build();
 
-        when(menuService.updateMenu(1L, updateMenuRequest)).thenReturn(updateMenuResponse);
+        given(menuService.updateMenu(any(), any())).willReturn(updateMenuResponse);
 
         //when
         MvcResult mvcResult = mockMvc.perform(put("/menu/{menuId}", 1)
@@ -164,10 +167,14 @@ class MenuControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn();
 
+        UpdateMenuResponse updatedMenu = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UpdateMenuResponse.class);
+
         //then
         assertSoftly((softly) -> {
-            softly.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
-            softly.assertThat(mvcResult.getResponse().getRedirectedUrl()).isNotNull();
+            softly.assertThat(updatedMenu.getId()).isEqualTo(updateMenuResponse.getId());
+            softly.assertThat(updatedMenu.getName()).isEqualTo(updateMenuResponse.getName());
+            softly.assertThat(updatedMenu.getType()).isEqualTo(updateMenuResponse.getType());
+            softly.assertThat(updatedMenu.isUsing()).isEqualTo(updateMenuResponse.isUsing());
         });
     }
 
@@ -179,7 +186,7 @@ class MenuControllerTest {
         UpdateMenuResponse updateMenuResponse = UpdateMenuResponse.builder()
                 .id(1L).name("케이크")
                 .type(MenuType.DESSERT)
-                .isUsing(true)
+                .isUsing(false)
                 .build();
 
         given(menuService.changeMenuToNonUse(1L)).willReturn(updateMenuResponse);

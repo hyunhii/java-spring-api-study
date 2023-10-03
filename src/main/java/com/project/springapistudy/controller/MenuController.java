@@ -8,6 +8,7 @@ import com.project.springapistudy.service.dto.UpdateMenuResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -21,7 +22,15 @@ public class MenuController {
 
     @PostMapping
     public ResponseEntity<CreateMenuResponse> saveMenu(@RequestBody CreateMenuRequest request) {
-        return ResponseEntity.created(URI.create("/")).body(menuService.createMenu(request));
+        CreateMenuResponse response = menuService.createMenu(request);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(response.getId())
+                .toUri();
+        
+        return ResponseEntity.created(location).body(response);
     }
     @GetMapping("/{menuId}")
     public ResponseEntity<CreateMenuResponse> findMenuOne(@PathVariable Long menuId) {
@@ -35,11 +44,21 @@ public class MenuController {
 
     @PutMapping("/{menuId}")
     public ResponseEntity<UpdateMenuResponse> updateMenu(@PathVariable Long menuId, @RequestBody UpdateMenuRequest request) {
-        return ResponseEntity.created(URI.create("/" + menuId)).body(menuService.updateMenu(menuId, request));
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toUri();
+
+        return ResponseEntity.created(location).body(menuService.updateMenu(menuId, request));
     }
 
     @PatchMapping("/{menuId}")
     public ResponseEntity<UpdateMenuResponse> changeMenuToNonUse(@PathVariable Long menuId) {
-        return ResponseEntity.created(URI.create("/" + menuId)).body(menuService.changeMenuToNonUse(menuId));
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .build()
+                .toUri();
+
+        return ResponseEntity.created(location).body(menuService.changeMenuToNonUse(menuId));
     }
 }
