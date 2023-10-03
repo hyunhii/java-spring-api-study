@@ -89,7 +89,12 @@ class MenuControllerTest {
     @DisplayName("메뉴 조회")
     void findMenuOne() throws Exception {
         //given
-        CreateMenuResponse response = new CreateMenuResponse(1L, "아메리카노", MenuType.BEVERAGE, true);
+        CreateMenuResponse response = CreateMenuResponse.builder()
+                .id(1L)
+                .name("아메리카노")
+                .type(MenuType.BEVERAGE)
+                .isUsing(true)
+                .build();
 
         when(menuService.findMenuById(1L)).thenReturn(response);
 
@@ -113,9 +118,9 @@ class MenuControllerTest {
     void findMenuAll() throws Exception {
         //given
         ArrayList<CreateMenuResponse> menus = new ArrayList<>();
-        menus.add(new CreateMenuResponse(1L, "아메리카노", MenuType.BEVERAGE,true));
-        menus.add(new CreateMenuResponse(2L, "라떼", MenuType.BEVERAGE,true));
-        menus.add(new CreateMenuResponse(3L, "카푸치노", MenuType.BEVERAGE,true));
+        menus.add(CreateMenuResponse.builder().id(1L).name("아메리카노").type(MenuType.BEVERAGE).isUsing(true).build());
+        menus.add(CreateMenuResponse.builder().id(2L).name("라떼").type(MenuType.BEVERAGE).isUsing(true).build());
+        menus.add(CreateMenuResponse.builder().id(3L).name("카푸치노").type(MenuType.BEVERAGE).isUsing(true).build());
         given(menuService.findMenuAll()).willReturn(menus);
 
         //when
@@ -137,7 +142,12 @@ class MenuControllerTest {
     void updateMenu() throws Exception {
         //given
         UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, true);
-        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, true);
+
+        UpdateMenuResponse updateMenuResponse = UpdateMenuResponse.builder()
+                .id(1L).name("케이크")
+                .type(MenuType.DESSERT)
+                .isUsing(true)
+                .build();
 
         when(menuService.updateMenu(1L, updateMenuRequest)).thenReturn(updateMenuResponse);
 
@@ -159,7 +169,11 @@ class MenuControllerTest {
     void changeMenuToNonUse() throws Exception {
         //given
         UpdateMenuRequest updateMenuRequest = new UpdateMenuRequest("케이크", MenuType.DESSERT, false);
-        UpdateMenuResponse updateMenuResponse = new UpdateMenuResponse(1L, "케이크", MenuType.DESSERT, false);
+        UpdateMenuResponse updateMenuResponse = UpdateMenuResponse.builder()
+                .id(1L).name("케이크")
+                .type(MenuType.DESSERT)
+                .isUsing(true)
+                .build();
 
         given(menuService.changeMenuToNonUse(1L)).willReturn(updateMenuResponse);
 

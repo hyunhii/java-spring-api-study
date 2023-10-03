@@ -1,15 +1,15 @@
 package com.project.springapistudy.service.dto;
 
-
 import com.project.springapistudy.entity.MenuType;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class UpdateMenuResponse {
     @NotNull
     private Long id;
@@ -23,10 +23,4 @@ public class UpdateMenuResponse {
     @NotNull
     private boolean isUsing;
 
-    public UpdateMenuResponse(Long id, String name, MenuType type, boolean isUsing) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.isUsing = isUsing;
-    }
 }

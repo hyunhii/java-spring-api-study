@@ -27,22 +27,36 @@ public class MenuService {
         Menu menu = new Menu(request.getName(), request.getType(), request.isUsing());
         Menu savedMenu = menuRepository.save(menu);
 
-        return new CreateMenuResponse(savedMenu.getId(), savedMenu.getName(), savedMenu.getType(), savedMenu.isUsing());
+        return CreateMenuResponse.builder()
+                .id(savedMenu.getId())
+                .name(savedMenu.getName())
+                .type(savedMenu.getType())
+                .isUsing(savedMenu.isUsing())
+                .build();
     }
 
     public CreateMenuResponse findMenuById(Long id) {
         Menu findMenu = menuRepository.findById(id).orElseThrow();
 
-        return new CreateMenuResponse(findMenu.getId(), findMenu.getName(), findMenu.getType(), findMenu.isUsing());
+        return CreateMenuResponse.builder()
+                .id(findMenu.getId())
+                .name(findMenu.getName())
+                .type(findMenu.getType())
+                .isUsing(findMenu.isUsing())
+                .build();
     }
 
     public List<CreateMenuResponse> findMenuAll() {
         List<Menu> allMenu = menuRepository.findAll();
 
         return allMenu.stream()
-                .map(menu -> new CreateMenuResponse(
-                        menu.getId(), menu.getName(), menu.getType(), menu.isUsing()
-                )).collect(Collectors.toList());
+                .map(menu -> CreateMenuResponse.builder()
+                        .id(menu.getId())
+                        .name(menu.getName())
+                        .type(menu.getType())
+                        .isUsing(menu.isUsing())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -51,7 +65,12 @@ public class MenuService {
 
         findMenu.changeMenuInfo(updateMenuRequest);
 
-        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.isUsing());
+        return UpdateMenuResponse.builder()
+                .id(findMenu.getId())
+                .name(findMenu.getName())
+                .type(findMenu.getType())
+                .isUsing(findMenu.isUsing())
+                .build();
     }
 
     @Transactional
@@ -60,7 +79,12 @@ public class MenuService {
 
         findMenu.changeMenuToNonUse();
 
-        return new UpdateMenuResponse(id, findMenu.getName(), findMenu.getType(), findMenu.isUsing());
+        return UpdateMenuResponse.builder()
+                .id(findMenu.getId())
+                .name(findMenu.getName())
+                .type(findMenu.getType())
+                .isUsing(findMenu.isUsing())
+                .build();
     }
 
 }
