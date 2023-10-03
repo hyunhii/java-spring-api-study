@@ -6,7 +6,6 @@ import com.project.springapistudy.service.dto.CreateMenuResponse;
 import com.project.springapistudy.service.dto.UpdateMenuRequest;
 import com.project.springapistudy.service.dto.UpdateMenuResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +25,12 @@ public class MenuController {
     }
     @GetMapping("/{menuId}")
     public ResponseEntity<CreateMenuResponse> findMenuOne(@PathVariable Long menuId) {
-        return new ResponseEntity<>(menuService.findMenuById(menuId), HttpStatus.OK);
+        return ResponseEntity.ok().body(menuService.findMenuById(menuId));
     }
 
     @GetMapping
     public ResponseEntity<List<CreateMenuResponse>> findMenuAll() {
-        return new ResponseEntity<>(menuService.findMenuAll(), HttpStatus.OK);
+        return ResponseEntity.ok().body(menuService.findMenuAll());
     }
 
     @PutMapping("/{menuId}")
