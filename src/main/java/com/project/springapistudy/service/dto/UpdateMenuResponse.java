@@ -1,5 +1,6 @@
 package com.project.springapistudy.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.springapistudy.entity.MenuType;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class UpdateMenuResponse {
     private MenuType type;
 
     @NotNull
+    @JsonProperty("isUsing")
     private boolean isUsing;
 
 }
